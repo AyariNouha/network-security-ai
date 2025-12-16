@@ -1,8 +1,10 @@
+notepad .gitignore
+```
+**Contenu :**
+```
 # Python
-*.pyc
 __pycache__/
 *.py[cod]
-*$py.class
 *.so
 .Python
 venv/
@@ -26,28 +28,17 @@ staticfiles/
 node_modules/
 .next/
 out/
-*.log
-npm-debug.log*
 
-# Docker
-*.sql
-*.sqlite
+# ML Models
+ml_models/*.pkl
+ml_models/*.h5
+datasets/
 
 # IDE
 .vscode/
 .idea/
 *.swp
-*.swo
 
 # OS
 .DS_Store
 Thumbs.db
-
-# ML Models (trop gros pour GitHub)
-ml_models/*.pkl
-ml_models/*.h5
-datasets/CICIDS2017/
-
-# Logs
-logs/
-*.pcap
