@@ -1,0 +1,105 @@
+services:
+  db:
+    image: postgres:15
+    container_name: ai-nsm-db
+    environment:
+      POSTGRES_DB: ainsmdb
+      POSTGRES_USER: ainsmuser
+      POSTGRES_PASSWORD: ainsmpassword123
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - nsm-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: ai-nsm-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - nsm-network
+
+  web:
+    build: .
+    container_name: ai-nsm-web
+    command: python backend/manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - nsm-network
+
+  celery:
+    build: .
+    container_name: ai-nsm-celery
+    command: celery -A backend.celery worker -l info --pool=solo
+    volumes:
+      - .:/app
+    working_dir: /app/backend
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - nsm-network
+
+
+  celery-beat:
+    build: .
+    container_name: ai-nsm-celery-beat
+    command: celery -A backend.celery beat -l info
+    volumes:
+      - .:/app
+    working_dir: /app/backend
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - nsm-network
+
+  daphne:
+    build: .
+    container_name: ai-nsm-daphne
+    command: daphne -b 0.0.0.0 -p 8001 backend.asgi:application
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    networks:
+      - nsm-network
+  frontend:
+    build: ./frontend
+    container_name: ai-nsm-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+      - NEXT_PUBLIC_WS_URL=ws://localhost:8001/ws
+    depends_on:
+      - web
+      - daphne
+    networks:
+      - nsm-network
+
+
+volumes:
+  postgresdata:
+
+networks:
+  nsm-network:
+    driver: bridge
