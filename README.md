@@ -131,25 +131,6 @@ NEXT_PUBLIC_WS_URL=ws://localhost:8001/ws
 
 ---
 
-## 🎓 Academic Context
-
-This project was developed as part of the **Secure Programming** course.
-
-**Team:**
-- Atitallah Mohamed
-- Ayari Nouha
-
-**Supervisor:** [Nom du professeur]
-
-**Institution:** [Votre université]
-
----
-
-## 📝 License
-
-MIT License - feel free to use this project for learning and research.
-
----
 
 ## 🙏 Acknowledgments
 
@@ -163,6 +144,6 @@ MIT License - feel free to use this project for learning and research.
 
 **⭐ Star this repo if you find it helpful!**
 
-Made with ❤️ by Mohamed & Nouha
+Made with ❤️ by Nouha
 
 </div>
